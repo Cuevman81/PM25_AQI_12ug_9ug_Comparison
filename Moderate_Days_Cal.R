@@ -10,7 +10,7 @@ library(scales)
 library(tidyr)
 
 # Create the user
-myuser <- create_user(email = "RCuevas@mdeq.ms.gov", key = "greyhawk63")
+myuser <- create_user(email = "api_user_name", key = "api_user_key")
 
 # Define the start and end years
 start_year <- 2023
