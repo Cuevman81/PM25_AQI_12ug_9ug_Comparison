@@ -6,7 +6,7 @@ In the code. Just change
 `end_year <- 2023`
 
 
-and 
+and your state code
 
 state = "28"
 
