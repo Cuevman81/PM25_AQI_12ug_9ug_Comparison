@@ -2,7 +2,6 @@ This R code fetches PM2.5 pollution data from the EPA's Air Quality System (AQS)
 
 In the code. Just change 
 
-# Define the start and end years
 start_year <- 2023
 end_year <- 2023
 
