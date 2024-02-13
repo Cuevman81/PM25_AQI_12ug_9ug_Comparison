@@ -12,5 +12,7 @@ state = "28"
 
 To get years and appropriate state that you want.
 
+Note, in this code example, the data being pulled is from the T640(x) and T640(s) with parameter code 88101 which is NAAQS designation.  If running T640's for AQI puroses only, parameter code 88502 or something different, just change in R code.
+
 2023 Comparison of PM25 AQI Moderate Days with both 12ug and 9ug
 ![image](https://github.com/Cuevman81/PM25_AQI_12ug_9ug_Comparison/assets/80535587/5b782e82-7b92-486f-8e8f-b2398c8c123c)
