@@ -41,16 +41,23 @@ for (year in start_year:end_year) {
 combined_data <- bind_rows(data_list)
 
 # Filter and select the desired columns
+# AQS holds T640/T640X PM2.5 under more than one method code for the same
+# instrument. Use only the corrected series, which is the regulatory record:
+#   236 / 238  raw T640 / T640X data (reads high) - not used
+#   736 / 738  "(Corrected)", through 2023-12-31
+#   636 / 638  "w/Network Data Alignment enabled", from 2024-01-01
 filtered_data <- combined_data %>%
-  filter(pollutant_standard == "PM25 Annual 2012") %>%
-  select(state_code, county_code, site_number, latitude, longitude, sample_duration,
-         date_local, arithmetic_mean, local_site_name, county, city)
-
-# Filter and select the desired columns
-filtered_data <- combined_data %>%
-  filter(pollutant_standard == "PM25 Annual 2012" &
-           method %in% c("Teledyne T640 at 5.0 LPM - Broadband spectroscopy", 
-                         "Teledyne T640X at 16.67 LPM - Broadband spectroscopy")) %>%
+  filter(pollutant_standard == "PM25 Annual 2012",
+         (as.Date(date_local) <  as.Date("2024-01-01") & method_code %in% c("736", "738")) |
+         (as.Date(date_local) >= as.Date("2024-01-01") & method_code %in% c("636", "638")),
+         # A day with an event flag has one row per event_type. Keep the measured
+         # value ("Events Included"), as on unflagged days ("No Events").
+         event_type %in% c("No Events", "Events Included")) %>%
+  # One value per site and day. If a site has two corrected monitors, use the
+  # higher one, as the AQI does (EPA AQI Technical Assistance Document).
+  group_by(state_code, county_code, site_number, date_local) %>%
+  slice_max(arithmetic_mean, n = 1, with_ties = FALSE) %>%
+  ungroup() %>%
   select(state_code, county_code, site_number, latitude, longitude, sample_duration,
          date_local, arithmetic_mean, local_site_name, county, city)
 
